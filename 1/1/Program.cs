@@ -22,7 +22,8 @@
                 int n = int.TryParse(description[2], out n) ? n : 0;
                 //  h = height, w = width, n = number of devices
                 System.Console.WriteLine("Case #" + caseNumber + ":" + " line: " + (line + 1));
-                // System.Console.WriteLine(input[line]);
+                System.Console.WriteLine(input[line]);
+                line++;
 
 
                 Dictionary<string, int> device_identifiers = new Dictionary<string, int>();
@@ -35,23 +36,30 @@
 
 
                 // System.Console.WriteLine(t + " " + h + " " + w + " " + n);
-                for (int i = 0; i <= n; i++)
+                for (int i = 0; i < n; i++)
                 {
-
                     string[] device = input[line].Split(" ");
+
                     int deviceH = int.TryParse(device[0], out deviceH) ? deviceH : 0;
                     int deviceW = int.TryParse(device[1], out deviceW) ? deviceW : 0;
+
                     // System.Console.WriteLine(deviceH + " " + deviceW + " " + device[2]);
+                    line++;
+                    // System.Console.WriteLine($"device {string.Join(" ", device)}");
                     if (!device_identifiers.ContainsKey(device[2]))
                     {
                         // we havent seen this device before so we set its identifier
+                        // System.Console.WriteLine(line.ToString() + " " + i.ToString() + " " + n.ToString());
                         device_identifiers.Add(device[2], device_identifier_count);
                         device_identifier_count++;
                         device_count.Add(device[2], 1);
                     }
+                    else
+                    {
+                        device_count[device[2]]++;
+                    }
                     // devices[i] = device[0] + " " + device[1] + " " + device[2];
                     grid[deviceH, deviceW] = device_identifiers[device[2]];
-                    line++;
                 }
 
 
@@ -78,7 +86,7 @@
                 }
                 if (device.Value % 2 != 0)
                 {
-                    System.Console.WriteLine("NOT EVEN" + " " + device.Key + " " + device.Value);
+                    System.Console.WriteLine($"NOT EVEN {device.Key}");
                     return false;
                 }
             }
