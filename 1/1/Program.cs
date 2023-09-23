@@ -11,16 +11,19 @@
 
 
             // now we need to go through each test case
-            for (int line = 1; line <= t; line++)
+            int line = 1;
+            for (int caseNum = 0; caseNum <= t; line++)
             {
+                System.Console.WriteLine("Case #" + caseNum + ":" + " line: " + line);
                 // we will take description of each test case and get height, width and how many devices there are 
-                string[] description = input[1].Split(" ");
+                string[] description = input[line].Split(" ");
+                line++;
                 int h = (int.TryParse(description[0], out h) ? h : 0) + 1;
                 int w = (int.TryParse(description[1], out w) ? w : 0) + 1;
                 int n = int.TryParse(description[2], out n) ? n : 0;
                 //  h = height, w = width, n = number of devices
 
-                System.Console.WriteLine("" + t + " " + h + " " + w + " " + n);
+                System.Console.WriteLine("" + t + " " + h + " " + w + " " + n + "alle");
 
 
                 Dictionary<string, int> device_identifiers = new Dictionary<string, int>();
@@ -35,7 +38,7 @@
                 for (int i = 0; i < n; i++)
                 {
                     // we will take each device and get its height and width
-                    string[] device = input[2 + i].Split(" ");
+                    string[] device = input[line + i].Split(" ");
                     int deviceH = int.TryParse(device[0], out deviceH) ? deviceH : 0;
                     int deviceW = int.TryParse(device[1], out deviceW) ? deviceW : 0;
                     // deviceH = device height, deviceW = device width
@@ -46,10 +49,11 @@
                         device_identifier_count++;
                     }
                     grid[deviceH, deviceW] = device_identifiers[device[2]];
-                    System.Console.WriteLine("" + deviceH + " " + deviceW + " " + device[2]);
+                    System.Console.WriteLine("sole " + deviceH + " " + deviceW + " " + device[2]);
                 }
                 line += n;
 
+                caseNum++;
                 show_grid(grid);
             }
         }
@@ -58,6 +62,10 @@
         {
 
         }
+
+        // public static int[] taxicab_distances(int n, int[,] grid, int h, int w){
+
+        // }
 
         public static int[,] preset_grid(int[,] grid, int h, int w)
         {
