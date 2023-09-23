@@ -1,0 +1,65 @@
+for (int caseNum = 1; caseNum <= 200; line++)
+            {
+                System.Console.WriteLine(input[line]);
+                System.Console.WriteLine("Case #" + caseNum + ":" + " line: " + line);
+                // we will take description of each test case and get height, width and how many devices there are 
+                string[] description = input[line].Split(" ");
+                line++;
+                int h = (int.TryParse(description[0], out h) ? h : 0) + 1;
+                int w = (int.TryParse(description[1], out w) ? w : 0) + 1;
+                int n = int.TryParse(description[2], out n) ? n : 0;
+                //  h = height, w = width, n = number of devices
+
+                System.Console.WriteLine("" + t + " " + h + " " + w + " " + n + "alle");
+
+
+                Dictionary<string, int> device_identifiers = new Dictionary<string, int>();
+                Dictionary<string, int> device_count = new Dictionary<string, int>();
+                int device_identifier_count = 1;
+                // now we need to create a grid with the height and width we got from the description
+                int[,] grid = new int[h, w];
+                grid = preset_grid(grid, h, w);
+                string[] devices = new string[n];
+
+
+
+
+                for (int i = 0; i < n; i++)
+                {
+                    // we will take each device and get its height and width
+                    string[] device = input[line + i].Split(" ");
+                    int deviceH = int.TryParse(device[0], out deviceH) ? deviceH : 0;
+                    int deviceW = int.TryParse(device[1], out deviceW) ? deviceW : 0;
+                    // deviceH = device height, deviceW = device width
+                    if (!device_identifiers.ContainsKey(device[2]))
+                    {
+                        // we havent seen this device before so we set its identifier
+                        device_identifiers.Add(device[2], device_identifier_count);
+                        device_identifier_count++;
+                        device_count.Add(device[2], 1);
+                    }
+                    else
+                    {
+                        device_count[device[2]]++;
+                    }
+                    devices[i] = device[0] + " " + device[1] + " " + device[2]; ;
+                    grid[deviceH, deviceW] = device_identifiers[device[2]];
+                    // System.Console.WriteLine(" " + deviceH + " " + deviceW + " " + device[2]);
+                }
+                line += n;
+
+                caseNum += 1;
+                // show_grid(grid);
+                // lets check if we have even number of devices
+                if (!even_devices(device_count))
+                {
+                    System.Console.WriteLine("Devices " + String.Join(" ", devices) + " are not even");
+                    System.Console.WriteLine("ajajaj ");
+                    correct++;
+                    // System.Console.WriteLine(String.Join("\n", devices));
+                    continue;
+                }
+
+
+
+            }
