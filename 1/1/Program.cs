@@ -13,7 +13,8 @@
             // now we need to go through each test case
             int line = 1;
             int correct = 0;
-            for (int caseNumber = 1; caseNumber <= t; caseNumber++)
+            string[] answers = new string[t];
+            for (int caseNumber = 1; caseNumber <= 1; caseNumber++)
             {
                 // we will take description of each test case and get height, width and how many devices there are 
                 string[] description = input[line].Split(" ");
@@ -27,7 +28,7 @@
 
 
                 Dictionary<string, int> device_identifiers = new Dictionary<string, int>();
-                Dictionary<string, int> device_count = new Dictionary<string, int>();
+                Dictionary<string, (int, List<int[,]>)> device_count = new Dictionary<string, (int, List<int[,]>)>();
                 int device_identifier_count = 1;
                 // now we need to create a grid with the height and width we got from the description
                 int[,] grid = new int[h, w];
@@ -52,41 +53,46 @@
                         // System.Console.WriteLine(line.ToString() + " " + i.ToString() + " " + n.ToString());
                         device_identifiers.Add(device[2], device_identifier_count);
                         device_identifier_count++;
-                        device_count.Add(device[2], 1);
+                        List<int[,]> coordinates = new List<int[,]>();
+                        int[,] cords = new int[deviceH, deviceW];
+                        coordinates.Add(cords);
+                        device_count.Add(device[2], (1, coordinates));
                     }
                     else
                     {
-                        device_count[device[2]]++;
+                        List<int[,]> coordinates = device_count[device[2]].Item2;
+                        int[,] cords = new int[deviceH, deviceW];
+                        coordinates.Add(cords);
+                        device_count[device[2]] = (device_count[device[2]].Item1 + 1, coordinates);
                     }
                     // devices[i] = device[0] + " " + device[1] + " " + device[2];
                     grid[deviceH, deviceW] = device_identifiers[device[2]];
                 }
 
 
-                if (!even_devices(device_count))
+                if (solveGrid(grid, device_count))
                 {
-                    // System.Console.WriteLine("Devices " + String.Join(" ", devices));
-                    System.Console.WriteLine("ajajaj ");
                     correct++;
-                    // System.Console.WriteLine(String.Join("\n", devices));
+                    System.Console.WriteLine("pujde to");
+                    System.Console.WriteLine(checkOutcome(caseNumber, "pujde to"));
+                    answers[caseNumber - 1] = "pujde to";
                     continue;
                 }
+                System.Console.WriteLine("ajajaj");
+                System.Console.WriteLine(checkOutcome(caseNumber, "ajajaj"));
+                answers[caseNumber - 1] = "ajajaj";
 
             }
             System.Console.WriteLine("Correct: " + correct + " out of " + t);
+            File.WriteAllLines("output.txt", answers);
         }
 
-        public static bool even_devices(Dictionary<string, int> device_count)
+        public static bool even_devices(Dictionary<string, (int, List<int[,]>)> device_count)
         {
-            foreach (KeyValuePair<string, int> device in device_count)
+            foreach (KeyValuePair<string, (int, List<int[,]>)> device in device_count)
             {
-                if (device.Value > 2)
+                if (device.Value.Item1 < 2)
                 {
-                    // System.Console.WriteLine("MORE THAN EVEN" + " " + device.Key + " " + device.Value);
-                }
-                if (device.Value % 2 != 0)
-                {
-                    System.Console.WriteLine($"NOT EVEN {device.Key}");
                     return false;
                 }
             }
@@ -116,10 +122,140 @@
             }
         }
 
+        public static bool checkOutcome(int caseNumber, string outcome)
+        {
+            string[] input = File.ReadAllText("outputCorrect.txt").Split("\n");
+            if (input[5] == outcome)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static bool checkConnected(int[,] grid, int cabelH, int cabelW, int device_identifier_count)
+        {
+            // we need to check if the cabel is connected to another device
+
+            // Top corner
+            if (cabelH - 1 >= 0)
+            {
+                if (grid[cabelH - 1, cabelW] == device_identifier_count) return true;
+            }
+            // Top Left corner
+            if (cabelH - 1 >= 0 && cabelW - 1 >= 0)
+            {
+                if (grid[cabelH - 1, cabelW - 1] == device_identifier_count) return true;
+            }
+            // Top Right corner
+            if (cabelH - 1 >= 0 && cabelW + 1 < grid.GetLength(1))
+            {
+                if (grid[cabelH - 1, cabelW + 1] == device_identifier_count) return true;
+            }
+            // Left corner
+            if (cabelW - 1 >= 0)
+            {
+                if (grid[cabelH, cabelW - 1] == device_identifier_count) return true;
+            }
+            // Right corner
+            if (cabelW + 1 < grid.GetLength(1))
+            {
+                if (grid[cabelH, cabelW + 1] == device_identifier_count) return true;
+            }
+            // Bottom corner
+            if (cabelH + 1 < grid.GetLength(0))
+            {
+                if (grid[cabelH + 1, cabelW] == device_identifier_count) return true;
+            }
+            // Bottom Left corner
+            if (cabelH + 1 < grid.GetLength(0) && cabelW - 1 >= 0)
+            {
+                if (grid[cabelH + 1, cabelW - 1] == device_identifier_count) return true;
+            }
+            // Bottom Right corner
+            if (cabelH + 1 < grid.GetLength(0) && cabelW + 1 < grid.GetLength(1))
+            {
+                if (grid[cabelH + 1, cabelW + 1] == device_identifier_count) return true;
+            }
+            return false;
+
+        }
+
         public static void manhatan_distance(int n, int[,] grid, int h, int w)
         {
 
         }
+        // UNFINISHED
+        public static void getAllCombinations(int[,] grid, int device_identifier_count, Dictionary<string, (int, List<int[,]>)> device_count)
+        {
+            // we need to get all combinations of starting and ending points for each device
+            // we will store them in a list of tuples where each tuple will contain 3 arrays
+            // first array will be the starting points, second array will be the ending points and third array will be the cable identifier
+            List<(int[], int[], int[])> combinations = new List<(int[], int[], int[])>();
+
+            for (int i = 0; i < device_count.Count; i++)
+            {
+                // we need to get all starting points for each device
+                int[] starting_points = new int[device_count.ElementAt(i).Value.Item1];
+                int[] ending_points = new int[device_count.ElementAt(i).Value.Item1];
+                int[] cable_identifiers = new int[device_identifier_count + 1];
+                device_identifier_count++;
+                int[,] starting_point = new int[0, 0];
+                int[,] ending_point = new int[0, 0];
+                for (int j = 0; j < grid.GetLength(0); j++)
+                {
+                    for (int k = 0; k < grid.GetLength(1); k++)
+                    {
+                        if (grid[j, k] == device_count.ElementAt(i).Value.Item1)
+                        {
+                        }
+                        if (grid[j, k] == device_count.ElementAt(i).Value.Item1)
+                        {
+                        }
+                    }
+                }
+                combinations.Add((starting_points, ending_points, cable_identifiers));
+            }
+
+        }
+
+        public static int[] getStartingPoints(Dictionary<string, (int, List<int[,]>)> device_count)
+        {
+            int[] starting_points = new int[device_count.Count];
+
+            for (int i = 0; i < device_count.Count; i++)
+            {
+                // we need to get all starting points for each device
+                starting_points[i] = device_count.ElementAt(i).Value.Item1;
+
+            }
+            return starting_points;
+
+        }
+        public static bool solveGrid(int[,] grid, Dictionary<string, (int, List<int[,]>)> device_count)
+        {
+            show_grid(grid);
+            if (!even_devices(device_count))
+            {
+                return false;
+            }
+            // we need to get all combinations of starting and ending points
+            int[] starting_points = getStartingPoints(device_count);
+
+            // Now wer are gonna use Breadth-first search to find all paths between starting point and any device with the same port 
+            // and save starting point, every cable position, and ending device point
+
+
+
+
+
+            return true;
+        }
+
+        public static void findPath()
+        {
+
+        }
+
 
     }
 }
