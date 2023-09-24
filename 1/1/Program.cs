@@ -28,7 +28,7 @@
 
 
                 Dictionary<string, int> device_identifiers = new Dictionary<string, int>();
-                Dictionary<string, (int, List<int[,]>)> device_count = new Dictionary<string, (int, List<int[,]>)>();
+                Dictionary<string, (int, List<int[]>)> device_count = new Dictionary<string, (int, List<int[]>)>();
                 int device_identifier_count = 1;
                 // now we need to create a grid with the height and width we got from the description
                 int[,] grid = new int[h, w];
@@ -53,15 +53,15 @@
                         // System.Console.WriteLine(line.ToString() + " " + i.ToString() + " " + n.ToString());
                         device_identifiers.Add(device[2], device_identifier_count);
                         device_identifier_count++;
-                        List<int[,]> coordinates = new List<int[,]>();
-                        int[,] cords = new int[deviceH, deviceW];
+                        List<int[]> coordinates = new List<int[]>();
+                        int[] cords = new int[2] { deviceH, deviceW };
                         coordinates.Add(cords);
                         device_count.Add(device[2], (1, coordinates));
                     }
                     else
                     {
-                        List<int[,]> coordinates = device_count[device[2]].Item2;
-                        int[,] cords = new int[deviceH, deviceW];
+                        List<int[]> coordinates = device_count[device[2]].Item2;
+                        int[] cords = new int[2] { deviceH, deviceW };
                         coordinates.Add(cords);
                         device_count[device[2]] = (device_count[device[2]].Item1 + 1, coordinates);
                     }
@@ -87,9 +87,9 @@
             File.WriteAllLines("output.txt", answers);
         }
 
-        public static bool even_devices(Dictionary<string, (int, List<int[,]>)> device_count)
+        public static bool even_devices(Dictionary<string, (int, List<int[]>)> device_count)
         {
-            foreach (KeyValuePair<string, (int, List<int[,]>)> device in device_count)
+            foreach (KeyValuePair<string, (int, List<int[]>)> device in device_count)
             {
                 if (device.Value.Item1 < 2)
                 {
@@ -180,45 +180,7 @@
 
         }
 
-        public static void manhatan_distance(int n, int[,] grid, int h, int w)
-        {
-
-        }
-        // UNFINISHED
-        public static void getAllCombinations(int[,] grid, int device_identifier_count, Dictionary<string, (int, List<int[,]>)> device_count)
-        {
-            // we need to get all combinations of starting and ending points for each device
-            // we will store them in a list of tuples where each tuple will contain 3 arrays
-            // first array will be the starting points, second array will be the ending points and third array will be the cable identifier
-            List<(int[], int[], int[])> combinations = new List<(int[], int[], int[])>();
-
-            for (int i = 0; i < device_count.Count; i++)
-            {
-                // we need to get all starting points for each device
-                int[] starting_points = new int[device_count.ElementAt(i).Value.Item1];
-                int[] ending_points = new int[device_count.ElementAt(i).Value.Item1];
-                int[] cable_identifiers = new int[device_identifier_count + 1];
-                device_identifier_count++;
-                int[,] starting_point = new int[0, 0];
-                int[,] ending_point = new int[0, 0];
-                for (int j = 0; j < grid.GetLength(0); j++)
-                {
-                    for (int k = 0; k < grid.GetLength(1); k++)
-                    {
-                        if (grid[j, k] == device_count.ElementAt(i).Value.Item1)
-                        {
-                        }
-                        if (grid[j, k] == device_count.ElementAt(i).Value.Item1)
-                        {
-                        }
-                    }
-                }
-                combinations.Add((starting_points, ending_points, cable_identifiers));
-            }
-
-        }
-
-        public static int[] getStartingPoints(Dictionary<string, (int, List<int[,]>)> device_count)
+        public static int[] getStartingPoints(Dictionary<string, (int, List<int[]>)> device_count)
         {
             int[] starting_points = new int[device_count.Count];
 
@@ -231,7 +193,7 @@
             return starting_points;
 
         }
-        public static bool solveGrid(int[,] grid, Dictionary<string, (int, List<int[,]>)> device_count)
+        public static bool solveGrid(int[,] grid, Dictionary<string, (int, List<int[]>)> device_count)
         {
             show_grid(grid);
             if (!even_devices(device_count))
@@ -241,8 +203,22 @@
             // we need to get all combinations of starting and ending points
             int[] starting_points = getStartingPoints(device_count);
 
-            // Now wer are gonna use Breadth-first search to find all paths between starting point and any device with the same port 
-            // and save starting point, every cable position, and ending device point
+            List<Connection> connections = new List<Connection>();
+
+            foreach (KeyValuePair<string, (int, List<int[]>)> device in device_count)
+            {
+                for (int i = 0; i < device.Value.Item2.Count; i++)
+                {
+                    // System.Console.WriteLine(string.Join("Device ", device.Value.Item2[i]), device);
+                    int[] starting_point = device.Value.Item2[i];
+                    int[] ending_point = new int[2] { 0, 0 };
+                    connections.Add(new Connection(starting_point, new List<int[,]>(), ending_point));
+                }
+            }
+            foreach (Connection connect in connections)
+            {
+                System.Console.WriteLine("Connections " + string.Join(" ", connect.starting_point) + " - " + string.Join(" ", connect.ending_point));
+            }
 
 
 
@@ -257,6 +233,22 @@
         }
 
 
+    }
+
+    public class Connection
+    {
+        public int[] starting_point;
+        public int[,] grid;
+        public List<int[,]> path;
+        public int[] ending_point;
+
+        public Connection(int[] starting_point, List<int[,]> path, int[] ending_point)
+        {
+            this.starting_point = starting_point;
+            this.path = path;
+            this.ending_point = ending_point;
+
+        }
     }
 }
 
