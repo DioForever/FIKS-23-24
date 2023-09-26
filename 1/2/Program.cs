@@ -4,51 +4,51 @@
     {
         static void Main(string[] args)
         {
-            int[] arr = { 6, 9, 3 };
-            int[] positions = { 1, 2, 3 };
+            int[] arr = { 5, 4 };
+            int[] positions = { 1, 2 };
 
             //     position, value
-            Dictionary<int, int> schedule = new Dictionary<int, int>();
-            for (int i = 1; i <= arr.Length; i++)
+            // Dictionary<int, List<int>> schedule = new Dictionary<int, List<int>>();
+            List<int[]> schedule = new List<int[]>();
+            for (int i = 1; i <= arr.Length; i++) schedule.Add(new int[] { arr[i - 1] });
+
+
+            for (int i = 0; i < 10; i++)
             {
-                schedule.Add(i, arr[i - 1]);
+                System.Console.WriteLine("Iteration i" + i);
+                System.Console.WriteLine("positions size " + positions.Length);
+                for (int p = 0; p < positions.Length; p++)
+                {
+                    System.Console.WriteLine("Iteration p" + p);
+
+                    int position = positions[p];
+                    foreach (int value in schedule[position])
+                    {
+                        drawSchedule(schedule);
+                        addValue(schedule, positions, position, value);
+                        drawSchedule(schedule);
+                    }
+                }
             }
+            // addValue(schedule, positions, 2, 4);
 
-            int currentTime = 0;
-            int lowestTime = 0;
-            int highestValidPeriod = 0;
 
-            bool valid = false;
-
-            // while (!valid)
-            // {
-
-            // }
-            updateAll(positions, schedule);
-            System.Console.WriteLine(string.Join(" ", positions));
-            System.Console.WriteLine(string.Join(" ", schedule));
-            updateSpecific(positions, schedule, 11);
-            System.Console.WriteLine(string.Join(" ", positions));
-            System.Console.WriteLine(string.Join(" ", schedule));
-
-            // for (int i = 0; i < positions.Length; i++)
-            // {
-            //     schedule.Add(positions[i] + schedule[positions[i]], schedule[positions[i]]);
-            //     System.Console.WriteLine("added to " + (positions[i] + schedule[positions[i]]) + " - " + schedule[positions[i]]);
-            //     System.Console.WriteLine(schedule[positions[i]]);
-            //     positions[i] = positions[i] + schedule[positions[i]];
-
+            // for (int k = 0; k < 200; k++){
+            //     for (int i = 0; i < positions.Length; i++)
+            //     {
+            //         int position = positions[i];
+            //         int value = schedule[position][0];
+            //         int futurePosition = position + value;
+            //         if (futurePosition < schedule.Count)
+            //         {
+            //             schedule[futurePosition] = schedule[futurePosition].Concat(new int[] { value }).ToArray();
+            //         }
+            //     }
             // }
 
 
-            // foreach (KeyValuePair<int, int> entry in schedule)
-            // {
-            //     System.Console.WriteLine(entry.Key + " " + entry.Value);
-            //     schedule[entry.Key + entry.Value] = entry.Value;
-            // }
 
 
-            // while (valid)
 
 
         }
@@ -66,11 +66,35 @@
 
         */
 
-
-        public static bool valid(int[] arr, int currentTime)
+        public static void drawSchedule(List<int[]> schedule)
         {
+            //  Show the schedule
+            for (int i = 0; i < schedule.Count; i++)
+            {
+                System.Console.Write(string.Join(", ", schedule[i]) + " | ");
+            }
+            System.Console.WriteLine("\n--------------------");
+            for (int i = 0; i < schedule.Count; i++)
+            {
+                string space = new String(' ', Math.Abs((int)(schedule[i].Length * 1.5) - 1));
+                System.Console.Write(space + (i + 1) + space + " | ");
+            }
+        }
 
-            return true;
+        public static void addValue(List<int[]> schedule, int[] positions, int position, int value)
+        {
+            while (schedule.Count - 1 < position + value) schedule.Add(new int[] { });
+            if (schedule[position + value].Length == 0)
+            {
+                schedule.Add(new int[] { value });
+                System.Console.WriteLine("size " + (Array.IndexOf(positions, position)) + " - " + (position + value));
+                System.Console.WriteLine("positions " + string.Join(", ", positions));
+                positions[Array.IndexOf(positions, position)] = position + value;
+            }
+            else
+            {
+                schedule[position + value] = schedule[position + value].Concat(new int[] { value }).ToArray();
+            }
         }
 
         public static int findPeriod(int[] arr)
@@ -80,20 +104,40 @@
         }
 
 
-        public static void updateAll(int[] positions, Dictionary<int, int> schedule)
+        public static void updateAll(int[] positions, Dictionary<int, List<int>> schedule, int ammount)
         {
-            for (int i = 0; i < positions.Length; i++)
+            for (int k = 0; k < ammount; k++)
             {
-                updateSpecific(positions, schedule, positions[i]);
+                for (int i = 0; i < positions.Length; i++)
+                {
+                    updateSpecific(positions, schedule, positions[i]);
+                }
             }
         }
 
-        public static void updateSpecific(int[] positions, Dictionary<int, int> schedule, int position)
+        public static void updateSpecific(int[] positions, Dictionary<int, List<int>> schedule, int position)
         {
-            schedule.Add(position + schedule[position], schedule[position]);
-            System.Console.WriteLine("added to " + (position + schedule[position]) + " - " + schedule[position]);
-            System.Console.WriteLine(schedule[position]);
-            positions[Array.IndexOf(positions, position)] = position + schedule[position];
+            for (int i = 0; i < positions.Length; i++)
+            {
+                System.Console.WriteLine("Double " + position);
+                List<int> temp = new List<int>();
+
+                System.Console.WriteLine("Checking " + (position + schedule[position][0]));
+                if (schedule.ContainsKey(position + schedule[position][i]))
+                {
+                    temp = schedule[i];
+                }
+
+                temp.Add(schedule[position][i]);
+                System.Console.WriteLine("added to " + (position + schedule[position][i]) + " - " + schedule[position][i]);
+                schedule.Add(position + schedule[position][i], temp);
+
+
+            }
+            // schedule.Add(position + schedule[position], schedule[position]);
+            // System.Console.WriteLine("added to " + (position + schedule[position]) + " - " + schedule[position]);
+            // System.Console.WriteLine(schedule[position]);
+            // positions[Array.IndexOf(positions, position)] = position + schedule[position];
         }
     }
 }
