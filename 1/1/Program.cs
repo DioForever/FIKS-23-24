@@ -15,12 +15,16 @@ namespace cables
             int t = int.TryParse(input[0], out t) ? t : 0;
 
 
-            Dictionary<int, int[]> devicePositions = new Dictionary<int, int[]>();
-            devicePositions.Add(1, new int[2] { 0, 0 });
-            devicePositions.Add(2, new int[2] { 2, 0 });
-            devicePositions.Add(3, new int[2] { 1, 3 });
-            devicePositions.Add(4, new int[2] { 0, 1 });
-            Dictionary<int, (List<int[]>, int[], int[], int[,])> pathList = new Dictionary<int, (List<int[]>, int[], int[], int[,])>();
+            Dictionary<int, List<int[]>> devicePositions = new Dictionary<int, List<int[]>>();
+            List<int[]> deviceOne = new List<int[]>();
+            List<int[]> deviceTwo = new List<int[]>();
+            deviceOne.Add(new int[2] { 0, 1 });
+            deviceOne.Add(new int[2] { 1, 3 });
+            deviceTwo.Add(new int[2] { 2, 0 });
+            deviceTwo.Add(new int[2] { 0, 0 });
+            devicePositions.Add(1, deviceOne);
+            devicePositions.Add(2, deviceTwo);
+            // Dictionary<int, (List<int[]>, int[], int[], int[,])> pathList = new Dictionary<int, (List<int[]>, int[], int[], int[,])>();
 
 
 
@@ -33,21 +37,21 @@ namespace cables
 
             Show_grid(grid);
 
-            int[][] starting_points = getStartingPoints(devicePositions);
-            for (int i = 0; i < starting_points.Length; i++)
-            {
-                System.Console.WriteLine(string.Join(",", starting_points[i]));
 
-                Find_path(grid, starting_points[i], devicePositions.ElementAt(i).Value, devicePositions.ElementAt(i).Key, new List<int[]>(), pathList);
-                System.Console.WriteLine("------");
-                System.Console.WriteLine(pathList.Count);
-                for (int k = 0; k < pathList.Count; k++)
-                {
-                    Show_grid(pathList.ElementAt(k).Value.Item4);
-                    System.Console.WriteLine(string.Join(",", pathList.ElementAt(k).Value.Item1));
-                    System.Console.WriteLine("+++++++++++");
-                }
-            }
+            // for (int i = 0; i < starting_points.Length; i++)
+            // {
+            //     System.Console.WriteLine(string.Join(",", starting_points[i]));
+
+            //     Find_path(grid, starting_points[i], devicePositions.ElementAt(i).Value, devicePositions.ElementAt(i).Key, new List<int[]>(), pathList);
+            //     System.Console.WriteLine("------");
+            //     System.Console.WriteLine(pathList.Count);
+            //     for (int k = 0; k < pathList.Count; k++)
+            //     {
+            //         Show_grid(pathList.ElementAt(k).Value.Item4);
+            //         System.Console.WriteLine(string.Join(",", pathList.ElementAt(k).Value.Item1));
+            //         System.Console.WriteLine("+++++++++++");
+            //     }
+            // }
             // foreach (int[] startingPair in starting_points)
             // {
             //     System.Console.WriteLine(string.Join(",", startingPair));
@@ -163,20 +167,36 @@ namespace cables
 
         }
         // paths  
-        public static int[][] getStartingPoints(Dictionary<int, int[]> devicePositions)
+        public static int[][] getStartingPoints(Dictionary<int, List<int[]>> devicePositions)
         {
             // Tuple<int[]> starting_points = new Tuple<int[]>(new int[2] { 0, 1 });
             int[][] starting_points = new int[devicePositions.Count][];
 
-            for (int i = 0; i < devicePositions.Count; i++)
+            System.Console.WriteLine("keys " + string.Join(",", devicePositions.Keys.ToArray()));
+            for (int identifier = 1; identifier <= devicePositions.Count; identifier++)
             {
-                // we need to get all starting points for each device
-                starting_points[i] = new int[2] { devicePositions.ElementAt(i).Value[0], devicePositions.ElementAt(i).Value[1] };
-                // starting_points[i] = devicePositions.ElementAt(i).Value[0];
+                System.Console.WriteLine("identifier " + identifier);
+                List<int[]> devicePos = devicePositions[identifier];
+                for (int unique = 0; unique < devicePos.Count; unique++)
+                {
+                    System.Console.WriteLine("Start pos " + string.Join(",", devicePos[unique]));
+
+                }
 
             }
             return starting_points;
 
+        }
+        public static int[][] getInstructionPoints(Dictionary<int, List<int[]>> devicePositions, int[][] starting_points)
+        {
+            // int[] allIdentifiers = devicePositions.Keys.ToArray();
+
+            // for (int i = 0; i < allIdentifiers.Length; i++)
+            // {
+            //     System.Console.WriteLine(allIdentifiers[i]);
+            // }
+
+            return null;
         }
         public static void Find_path(int[,] grid, int[] start, int[] end, int device_identifier, List<int[]> path, Dictionary<int, (List<int[]>, int[], int[], int[,])> pathList)
         {
@@ -342,6 +362,12 @@ namespace cables
 
             }
 ;
+        }
+
+        public static int findPath(int h, int w, int n)
+        {
+            
+            return 0;
         }
     }
 
