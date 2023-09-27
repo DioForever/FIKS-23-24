@@ -10,79 +10,67 @@ namespace cables
         static void Main()
         {
             System.Console.WriteLine("start");
-            string[] input = File.ReadAllText("input.txt").Split("\n");
+            string[] input = File.ReadAllText("inputCorrect.txt").Split("\n");
             // lets get how many test cases we have
             int t = int.TryParse(input[0], out t) ? t : 0;
+            int line = 1;
+            //  15 Rooms
+            for (int i = 1; i < 15; i++)
+            {
+                int[] inputValues = input[line].Split(" ").Select(int.Parse).ToArray();
+                int roomHeight = inputValues[0];
+                int roomWidth = inputValues[1];
+                int roomDeviceNumber = inputValues[2];
+                string[,] grid = Preset_grid(new string[roomHeight + 1, roomWidth + 1]);
+                System.Console.WriteLine("-----------------");
+                Show_grid(grid);
+                System.Console.WriteLine("--------------->");
+                for (int count = 0; count < roomDeviceNumber; count++)
+                {
+                    line++;
+                    string[] deviceInfo = input[line].Split(" ");
+                    int deviceHeight = int.TryParse(deviceInfo[0], out deviceHeight) ? deviceHeight : 0;
+                    int deviceWidth = int.TryParse(deviceInfo[1], out deviceWidth) ? deviceWidth : 0;
+                    string deviceName = deviceInfo[2];
+                    System.Console.WriteLine("Device " + deviceName + " " + deviceHeight + " " + deviceWidth);
 
+                    grid[deviceHeight, deviceWidth] = (deviceName);
+                    System.Console.WriteLine("Device " + deviceName + " " + deviceHeight + " " + deviceWidth);
+                }
+                Show_grid(grid);
 
-            Dictionary<int, List<int[]>> devicePositions = new Dictionary<int, List<int[]>>();
-            List<int[]> deviceOne = new List<int[]>();
-            List<int[]> deviceTwo = new List<int[]>();
-            deviceOne.Add(new int[2] { 0, 1 });
-            deviceOne.Add(new int[2] { 1, 3 });
-            deviceTwo.Add(new int[2] { 2, 0 });
-            deviceTwo.Add(new int[2] { 0, 0 });
-            devicePositions.Add(1, deviceOne);
-            devicePositions.Add(2, deviceTwo);
-            // Dictionary<int, (List<int[]>, int[], int[], int[,])> pathList = new Dictionary<int, (List<int[]>, int[], int[], int[,])>();
-
-
-
-            int[,] grid = Preset_grid(new int[2 + 1, 3 + 1]);
-
-            grid[0, 0] = 2;
-            grid[2, 0] = 2;
-            grid[1, 3] = 1;
-            grid[0, 1] = 1;
-
-            Show_grid(grid);
-
-
-            // for (int i = 0; i < starting_points.Length; i++)
-            // {
-            //     System.Console.WriteLine(string.Join(",", starting_points[i]));
-
-            //     Find_path(grid, starting_points[i], devicePositions.ElementAt(i).Value, devicePositions.ElementAt(i).Key, new List<int[]>(), pathList);
-            //     System.Console.WriteLine("------");
-            //     System.Console.WriteLine(pathList.Count);
-            //     for (int k = 0; k < pathList.Count; k++)
-            //     {
-            //         Show_grid(pathList.ElementAt(k).Value.Item4);
-            //         System.Console.WriteLine(string.Join(",", pathList.ElementAt(k).Value.Item1));
-            //         System.Console.WriteLine("+++++++++++");
-            //     }
-            // }
-            // foreach (int[] startingPair in starting_points)
-            // {
-            //     System.Console.WriteLine(string.Join(",", startingPair));
-            //     Find_path(grid, startingPair, devicePositions[1], 1, new List<int[]>(), paths);
-            // }
-
-            // Find_path(grid, )
+            }
         }
 
 
-        public static int[,] Preset_grid(int[,] grid)
+        public static string[,] Preset_grid(string[,] grid)
         {
             for (int i = 0; i < grid.GetLength(0); i++)
 
                 for (int j = 0; j < grid.GetLength(1); j++)
                 {
-                    grid[i, j] = 0;
+                    grid[i, j] = " ";
                 }
             return grid;
         }
 
-        public static void Show_grid(int[,] grid)
+        public static void Show_grid(string[,] grid)
         {
             for (int i = 0; i < grid.GetLength(0); i++)
             {
                 for (int j = 0; j < grid.GetLength(1); j++)
                 {
-                    System.Console.Write(grid[i, j] + " ");
+                    System.Console.Write(grid[i, j] + "|      |");
                 }
-                System.Console.WriteLine();
             }
+            // for (int i = 0; i < grid.GetLength(0); i++)
+            // {
+            //     for (int j = 0; j < grid.GetLength(1); j++)
+            //     {
+            //         System.Console.Write(grid[i, j] + "       ");
+            //     }
+            //     System.Console.WriteLine();
+            // }
         }
 
         public static int[] checkConnected(int[,] grid, int cabelH, int cabelW, int device_identifier_count)
@@ -366,7 +354,7 @@ namespace cables
 
         public static int findPath(int h, int w, int n)
         {
-            
+
             return 0;
         }
     }
