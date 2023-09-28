@@ -17,8 +17,6 @@ public class NAS
         for (int i = 1; i <= t; i++)
         {
             int[] arr = input[i * 2].Split(' ').ToArray().Select(x => int.Parse(x)).ToArray();
-            System.Console.WriteLine(i);
-            System.Console.WriteLine("i " + i + "/" + output.Length);
             output[i - 1] = GetK(arr);
         }
 
