@@ -10,6 +10,8 @@ namespace cables
         static void Main()
         {
             System.Console.WriteLine("start");
+            var watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
             string[] input = File.ReadAllText("input.txt").Split("\n");
             // lets get how many test cases we have
             int t = int.TryParse(input[0], out t) ? t : 0;
@@ -46,6 +48,14 @@ namespace cables
 
             }
             File.WriteAllLines("output.txt", output);
+            watch.Stop();
+            TimeSpan ts = watch.Elapsed;
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+            watch.Start();
+            Console.WriteLine("RunTime " + elapsedTime);
+
 
         }
 
