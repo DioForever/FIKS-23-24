@@ -1,0 +1,16 @@
+
+                                       Meziuzelná autorizace
+
+                                        Řešení s Rozšířením
+Vezmeme si první tři uzly 0, 1, 2 a zeptáme se jich, 1+1=2, uložíme si jejich odpověď jako VERIFIER. 
+Pro vysvětlování tohoto řešení změníme ANO => 1 a NE => 0 bit.
+Již zmíněnou trojici se začneme ptát jestli je uzel u = 0, 1, 2, 3,... SAP a vezmeme si jejich odpověď jako ANSWER.
+Vezmeme si VERIFIER a ANSWER a použijeme XOR a okud je výsledek 0 tak je protokol SAP a pokud 1 tak MAP.
+Toto řešení funguje na jak základním tak i rozšířeném zadání.
+
+Zde je ukázáno na příkladu.
+VERIFIER  ANSWER   PROTOCOL
+     1 XOR 0  => 1 => MAP
+     1 XOR 1  => 0 => SAP
+     0 XOR 0  => 0 => SAP
+     0 XOR 1  => 1 => MAP
