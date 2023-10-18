@@ -2,17 +2,26 @@
                                        Meziuzelná autorizace
 
                                         Řešení s Rozšířením
-Vezmeme si první tři uzly 0, 1, 2, dále uděláme loopu abychom prošli všechny uzli, pokaždé označíme si ho jako X.
-Vezmeme X a se zeptáme prvních tří uzlů "kdyby jsi byl opačný protokol než jsi, jak by jsi odpověděl jestli je uzel X je SAP?".
+Vezmeme si první tři uzly 0, 1, 2, dále uděláme loopu abychom prošli všechny uzli, pokaždé si uzel označíme jako X.
+Vezmeme X a se zeptáme prvních tří uzlů "kdyby jsi byl opačný protokol než jsi, jak by jsi odpověděl jestli uzel X je SAP?".
 Díky tomu, že se jich ptáme aby odpověděli opačne, tak SAP bude odpovídat jako MAP a MAP by odpovídal jako SAP, ale lže, takže zůstane MAP, tudíž všichni budou odpovídat jako MAP.
 Odpověď kterou od nich dostaneme bude tedy záporná, tudíž ANO => MAP a NE => SAP.	
-Nemusíme si brát první tři uzly, můžeme vzít jakékoliv, jen pro toto vysvětlení byli vybrány první tři.
+Nemusíme si brát první tři uzly, můžeme vzít jakékoliv tři, jen pro toto vysvětlení byli vybrány první tři.
 
 Zde je ukázáno na příkladu.
   Zadání                 Co je X                                   Dotaz                                                   Jako co odpoví  Odpověď  Protokol
-SAP SAP MAP             - X je SAP - "kdyby jsi byl opačný protokol než jsi, jak by jsi odpověděl jestli je uzel X je SAP?" => MAP MAP MAP => NE => SAP
-MAP MAP MAP             - X je MAP - "kdyby jsi byl opačný protokol než jsi, jak by jsi odpověděl jestli je uzel X je SAP?" => MAP MAP MAP => ANO => MAP
-shy SAP shy SAP MAP     - X je MAP - "kdyby jsi byl opačný protokol než jsi, jak by jsi odpověděl jestli je uzel X je SAP?" => MAP MAP MAP => ANO => MAP
-shy SAP SAP MAP         - X je SAP - "kdyby jsi byl opačný protokol než jsi, jak by jsi odpověděl jestli je uzel X je SAP?" => MAP MAP MAP => NE => SAP
-shy SAP shy SAP shy SAP - X je SAP - "kdyby jsi byl opačný protokol než jsi, jak by jsi odpověděl jestli je uzel X je SAP?" => MAP MAP MAP => NE => SAP
+SAP SAP MAP             - X je SAP - "kdyby jsi byl opačný protokol než jsi, jak by jsi odpověděl jestli uzel X je SAP?" => MAP MAP MAP => NE => SAP
+MAP MAP MAP             - X je MAP - "kdyby jsi byl opačný protokol než jsi, jak by jsi odpověděl jestli uzel X je SAP?" => MAP MAP MAP => ANO => MAP
+shy SAP shy SAP MAP     - X je MAP - "kdyby jsi byl opačný protokol než jsi, jak by jsi odpověděl jestli uzel X je SAP?" => MAP MAP MAP => ANO => MAP
+shy SAP SAP MAP         - X je SAP - "kdyby jsi byl opačný protokol než jsi, jak by jsi odpověděl jestli uzel X je SAP?" => MAP MAP MAP => NE => SAP
+shy SAP shy SAP shy SAP - X je SAP - "kdyby jsi byl opačný protokol než jsi, jak by jsi odpověděl jestli uzel X je SAP?" => MAP MAP MAP => NE => SAP
 
+Pseudo kód:
+opakovat pro všechny uzly
+  X <- uzel
+  pro první tři uzly:
+    odpověď <- "kdyby jsi byl opačný protokol než jsi, jak by jsi odpověděl jestli je uzel X je SAP?"
+    pokud odpověď je ANO
+      X <- MAP
+    jinak
+      X <- SAP
