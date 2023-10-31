@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BattleSystem
+namespace InstructionSystem
 {
-    public class BattleSystem
+    public class InstructionSystem
     {
 
-        public BattleSystem(InstructionPlan plan)
+        public InstructionSystem(InstructionPlan plan)
         {
             int pc = 0;
             while (pc < plan.instructions.Count)
@@ -192,7 +192,7 @@ namespace BattleSystem
             System.Console.WriteLine($"SUB 02 {reg1.number}{reg2.number} {immString}");
             int reg1Value = Convert.ToInt32(reg1.value.Replace(" ", ""), 16);
             int reg2Value = Convert.ToInt32(reg2.value.Replace(" ", ""), 16);
-            int immValue = Convert.ToInt32(imm, 16);
+            int immValue = Convert.ToInt32(imm.Replace(" ", ""), 16);
             string reg1Hex = (reg1Value - (reg2Value + immValue)).ToString("X");
             reg1.value = reg1Hex;
             pc++;
@@ -284,7 +284,7 @@ namespace BattleSystem
             string immString = ImmString.sort(imm);
             System.Console.WriteLine($"MOV 07 {reg1.number}{reg2.number} {immString}");
             int reg2Value = Convert.ToInt32(reg2.value.Replace(" ", ""), 16);
-            int immValue = Convert.ToInt32(imm, 16);
+            int immValue = Convert.ToInt32(imm.Replace(" ", ""), 16);
             string reg1Hex = (reg2Value + immValue).ToString("X");
             reg1.value = reg1Hex;
             pc++;
@@ -309,9 +309,9 @@ namespace BattleSystem
             System.Console.WriteLine($"JUMP 10 {reg1.number}{reg2.number} 00 0{immString}");
             int reg1Value = Convert.ToInt32(reg1.value.Replace(" ", ""), 16);
             int reg2Value = Convert.ToInt32(reg2.value.Replace(" ", ""), 16);
-            int immValue = Convert.ToInt32(imm, 16);
             if (reg1Value == reg2Value)
             {
+                imm = imm.Replace(" ", "");
                 pc += Convert.ToInt32(imm, 16);
             }
             else
@@ -339,9 +339,10 @@ namespace BattleSystem
             System.Console.WriteLine($"REVJUMP 11 {reg1.number}{reg2.number} {immString}");
             int reg1Value = Convert.ToInt32(reg1.value.Replace(" ", ""), 16);
             int reg2Value = Convert.ToInt32(reg2.value.Replace(" ", ""), 16);
-            int immValue = Convert.ToInt32(imm, 16);
+            // int immValue = Convert.ToInt32(imm, 16);
             if (reg1Value == reg2Value)
             {
+                imm = imm.Replace(" ", "");
                 pc -= Convert.ToInt32(imm, 16);
             }
             else
@@ -369,10 +370,9 @@ namespace BattleSystem
             System.Console.WriteLine($"LTJUMP 12 {reg1.number}{reg2.number} {immString}");
             int reg1Value = Convert.ToInt32(reg1.value.Replace(" ", ""), 16);
             int reg2Value = Convert.ToInt32(reg2.value.Replace(" ", ""), 16);
-            int immValue = Convert.ToInt32(imm, 16);
             if (reg1Value < reg2Value)
             {
-                pc += Convert.ToInt32(imm, 16);
+                pc += Convert.ToInt32(imm.Replace(" ", ""), 16);
             }
             else
             {
@@ -399,10 +399,9 @@ namespace BattleSystem
             System.Console.WriteLine($"REVLTJUMP 13 {reg1.number}{reg2.number} {immString}");
             int reg1Value = Convert.ToInt32(reg1.value.Replace(" ", ""), 16);
             int reg2Value = Convert.ToInt32(reg2.value.Replace(" ", ""), 16);
-            int immValue = Convert.ToInt32(imm, 16);
             if (reg1Value < reg2Value)
             {
-                pc -= Convert.ToInt32(imm, 16);
+                pc -= Convert.ToInt32(imm.Replace(" ", ""), 16);
             }
             else
             {
@@ -429,10 +428,9 @@ namespace BattleSystem
             System.Console.WriteLine($"NEQJUMP 14 {reg1.number}{reg2.number} {immString}");
             int reg1Value = Convert.ToInt32(reg1.value.Replace(" ", ""), 16);
             int reg2Value = Convert.ToInt32(reg2.value.Replace(" ", ""), 16);
-            int immValue = Convert.ToInt32(imm, 16);
             if (reg1Value != reg2Value)
             {
-                pc += Convert.ToInt32(imm, 16);
+                pc += Convert.ToInt32(imm.Replace(" ", ""), 16);
             }
             else
             {
@@ -459,10 +457,9 @@ namespace BattleSystem
             System.Console.WriteLine($"REVNEQJUMP 15 {reg1.number}{reg2.number} {immString}");
             int reg1Value = Convert.ToInt32(reg1.value.Replace(" ", ""), 16);
             int reg2Value = Convert.ToInt32(reg2.value.Replace(" ", ""), 16);
-            int immValue = Convert.ToInt32(imm, 16);
             if (reg1Value != reg2Value)
             {
-                pc -= Convert.ToInt32(imm, 16);
+                pc -= Convert.ToInt32(imm.Replace(" ", ""), 16);
             }
             else
             {
@@ -532,6 +529,10 @@ namespace BattleSystem
         public void Add(Instruction instruction)
         {
             instructions.Add(instruction);
+        }
+        public int Length()
+        {
+            return instructions.Count;
         }
     }
 
