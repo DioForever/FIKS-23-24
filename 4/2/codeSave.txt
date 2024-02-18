@@ -1,0 +1,205 @@
+using System;
+using System.Collections.Generic;
+
+class Graph
+{
+    private Dictionary<string, List<string>> graph;
+
+    public Graph()
+    {
+        graph = new Dictionary<string, List<string>>();
+    }
+
+    public void AddEdge(string u, string v)
+    {
+        if (!graph.ContainsKey(u))
+        {
+            graph[u] = new List<string>();
+        }
+        graph[u].Add(v);
+    }
+
+    public List<Path> BFSAllShortestPaths(string start, string end, Dictionary<(string, string), (int[], string)> edges)
+    {
+        Queue<Tuple<string, List<string>>> queue = new Queue<Tuple<string, List<string>>>();
+        queue.Enqueue(new Tuple<string, List<string>>(start, new List<string> { start }));
+
+        List<Path> shortestPaths = new List<Path>();
+        int shortestLength = int.MaxValue;
+
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+            string currentNode = current.Item1;
+            List<string> path = current.Item2;
+
+            if (currentNode == end)
+            {
+                int currentLength = path.Count;
+
+                if (currentLength < shortestLength)
+                {
+                    shortestPaths.Clear();
+                    shortestLength = currentLength;
+                    // If the Temperature is 0, there is no better path we need
+                    System.Console.WriteLine($"Added {string.Join(", ", path)}");
+                    var pathProps = GetPropOfPath(path, edges);
+                    Path pathObj = new Path(pathProps.visitedIdentificators, pathProps.temperature, pathProps.options);
+                    shortestPaths.Add(pathObj);
+                    if (pathObj.temperature == 0) return shortestPaths;
+                }
+                else if (currentLength == shortestLength)
+                {
+                    Path pathObj = new Path(path, 0);
+                    shortestPaths.Add(pathObj);
+                }
+            }
+
+            if (graph.ContainsKey(currentNode))
+            {
+                foreach (var neighbor in graph[currentNode])
+                {
+                    if (!path.Contains(neighbor))
+                    {
+                        List<string> newPath = new List<string>(path);
+                        newPath.Add(neighbor);
+                        queue.Enqueue(new Tuple<string, List<string>>(neighbor, newPath));
+                    }
+                }
+            }
+        }
+
+        return shortestPaths;
+    }
+    /// <summary>
+    ///     Function takes visited nodes, creates the correct format to be returned and counts its Temperature, even finds optional paths in case we need smaller Temperature.
+    /// </summary>
+    /// <param name="visited">List of visited nodes</param>
+    /// <param name="edges">Dictionary storing edges with key - startingNode,endingNode, and value - possible values, possible indentificators  </param>
+    static (List<string> visitedIdentificators, int temperature, Dictionary<string, string> options) GetPropOfPath(List<string> visited, Dictionary<(string, string), (int[], string)> edges)
+    {
+        List<string> visitedIdentificators = new List<string>();
+        Dictionary<string, string> options = new Dictionary<string, string>();
+        int temperature = 0;
+        for (int i = 1; i < visited.Count; i++)
+        {
+            (int[] value, string identificator) edge = edges[(visited[i - 1], visited[i])];
+            if (edge.value.Length == 1)
+            {
+                int value = edge.value[0];
+                string identificator = edge.identificator.ToCharArray()[0].ToString();
+
+                visitedIdentificators.Add(identificator);
+                temperature += value;
+            }
+            else
+            {
+                // If there are two same choices, we disregard it as an option
+                if (edge.value[0] == edge.value[1]) continue;
+
+                // Now we use options, but we add the positive one of them
+                int index = 0;
+                int indexOpt = 1;
+                if (edge.value[1] == 1) { index = 1; indexOpt = 0; }
+                string chosenIdentificator = edge.identificator[index].ToString();
+
+                temperature += edge.value[index];
+                visitedIdentificators.Add(chosenIdentificator);
+
+
+                string optionalIdentificator = edge.identificator[indexOpt].ToString();
+                options.Add(chosenIdentificator, optionalIdentificator);
+            }
+        }
+        return (visitedIdentificators, temperature, options);
+    }
+
+    static Path correctPath(Path path)
+    {
+        if (path.options.Count == 0) return path;
+        return path;
+    }
+}
+
+class Path
+{
+    public List<string> visited;
+    public int temperature;
+    public Dictionary<string, string> options;
+
+    public Path(List<string> visited, int temperature, Dictionary<string, string> options = null)
+    {
+        this.visited = visited;
+        this.temperature = temperature;
+        this.options = options ?? new Dictionary<string, string>();
+    }
+}
+
+
+
+
+
+class Program
+{
+    static void Main()
+    {
+        Graph graph = new Graph();
+        Dictionary<(string, string), (int[], string)> edges = new Dictionary<(string, string), (int[], string)>();
+
+
+        // int[] edge0Temperature = new int[1] { 1 };
+        // string edge0Identificator = "0";
+        // graph.AddEdge("0", "1");
+        // edges.Add(("0", "1"), (edge0Temperature, edge0Identificator));
+        // int[] edge1Temperature = new int[1] { -1 };
+        // string edge1Identificator = "1";
+        // graph.AddEdge("0", "2");
+        // edges.Add(("0", "2"), (edge1Temperature, edge1Identificator));
+        // int[] edge2Temperature = new int[1] { -1 };
+        // string edge2Identificator = "2";
+        // graph.AddEdge("1", "3");
+        // edges.Add(("1", "3"), (edge2Temperature, edge2Identificator));
+        // int[] edge3Temperature = new int[1] { 1 };
+        // string edge3Identificator = "3";
+        // edges.Add(("2", "3"), (edge3Temperature, edge3Identificator));
+        // graph.AddEdge("2", "3");
+
+
+        // graph.AddEdge("0", "1");
+        // graph.AddEdge("1", "2");
+        // graph.AddEdge("2", "3");
+        // graph.AddEdge("3", "4");
+        graph.AddEdge("0", "1");
+        int[] edge0Temperature = new int[1] { 1 };
+        string edge0Identificator = "0";
+        edges.Add(("0", "1"), (edge0Temperature, edge0Identificator));
+
+        int[] edge1Temperature = new int[2] { -1, 1 };
+        string edge1Identificator = "12";
+        graph.AddEdge("1", "2");
+        edges.Add(("1", "2"), (edge1Temperature, edge1Identificator));
+
+        int[] edge2Temperature = new int[1] { -1 };
+        string edge2Identificator = "3";
+        graph.AddEdge("2", "3");
+        edges.Add(("2", "3"), (edge2Temperature, edge2Identificator));
+
+        int[] edge3Temperature = new int[1] { -1 };
+        string edge3Identificator = "4";
+        edges.Add(("3", "4"), (edge3Temperature, edge3Identificator));
+        graph.AddEdge("3", "4");
+
+        string startNode = "0";
+        string endNode = "4";
+
+        List<Path> resultPaths = graph.BFSAllShortestPaths(startNode, endNode, edges);
+        Console.WriteLine($"All shortest paths from {startNode} to {endNode}:");
+
+        foreach (var path in resultPaths)
+        {
+            Console.WriteLine(string.Join(" -> ", path.visited) + " temp: " + path.temperature + " options: " + string.Join(", ", path.options));
+        }
+    }
+
+
+}

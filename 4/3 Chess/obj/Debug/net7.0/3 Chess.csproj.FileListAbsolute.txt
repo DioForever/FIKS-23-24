@@ -1,0 +1,15 @@
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\4\3 Chess\bin\Debug\net7.0\3 Chess.exe
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\4\3 Chess\bin\Debug\net7.0\3 Chess.deps.json
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\4\3 Chess\bin\Debug\net7.0\3 Chess.runtimeconfig.json
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\4\3 Chess\bin\Debug\net7.0\3 Chess.dll
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\4\3 Chess\bin\Debug\net7.0\3 Chess.pdb
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\4\3 Chess\obj\Debug\net7.0\3 Chess.csproj.AssemblyReference.cache
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\4\3 Chess\obj\Debug\net7.0\3 Chess.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\4\3 Chess\obj\Debug\net7.0\3 Chess.AssemblyInfoInputs.cache
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\4\3 Chess\obj\Debug\net7.0\3 Chess.AssemblyInfo.cs
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\4\3 Chess\obj\Debug\net7.0\3 Chess.csproj.CoreCompileInputs.cache
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\4\3 Chess\obj\Debug\net7.0\3 Chess.dll
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\4\3 Chess\obj\Debug\net7.0\refint\3 Chess.dll
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\4\3 Chess\obj\Debug\net7.0\3 Chess.pdb
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\4\3 Chess\obj\Debug\net7.0\3 Chess.genruntimeconfig.cache
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\4\3 Chess\obj\Debug\net7.0\ref\3 Chess.dll
