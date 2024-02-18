@@ -1,0 +1,156 @@
+2 1
+192.168.1.1
+64.168.1.1
+6 3
+3.248.15.8
+0.32.96.103
+3.222.215.208
+0.0.54.16
+0.93.84.80
+0.88.99.215
+
+
+
+namespace Routing
+{
+    class Routing
+    {
+        static void Main(string[] args)
+        {
+            Task[] tasks = ParseInput("input.txt");
+            for (int t = 0; t < tasks.Length; t++)
+            {
+                System.Console.WriteLine(tasks[t].adresses.Length);
+                for (int a = 0; a < tasks[t].adresses.Length; a++)
+                {
+                    Adress adress = tasks[t].adresses[a];
+                    System.Console.WriteLine(adress.ToString());
+                }
+                System.Console.WriteLine();
+            }
+
+            for (int taskCount = 0; taskCount < tasks.Length; taskCount++)
+            {
+                Adress mask = GetHighestMask(tasks[taskCount]);
+                System.Console.WriteLine("Highest mask: ");
+                System.Console.WriteLine(mask);
+
+            }
+
+
+        }
+        static Task[] ParseInput(string inputFileName)
+        {
+            string[] input_unparsed = File.ReadAllLines(inputFileName);
+            int t = int.Parse(input_unparsed[0]); // Number of tasks
+            Task[] tasks = new Task[t];
+            int linePointer = 1;
+            for (int taskCount = 0; taskCount < t; taskCount++)
+            {
+                string[] line_n_k = input_unparsed[linePointer].Split(" ");
+                int n = int.Parse(line_n_k[0]); // Number of Adresses
+                int k = int.Parse(line_n_k[1]); // Maximal number of subnets
+                Adress[] adresses = new Adress[n];
+                linePointer++;
+                for (int adressCount = 0; adressCount < n; adressCount++)
+                {
+                    string[] adress_unparsed = input_unparsed[linePointer].Split(".");
+                    byte[] IP = new byte[32];
+                    for (int i = 0; i < 4; i++)
+                    {
+                        string bits = Convert.ToString(int.Parse(adress_unparsed[i]), 2).PadLeft(8, '0');
+                        for (int l = 0; l < 8; l++)
+                        {
+                            IP[i * 8 + l] = byte.Parse((bits[l]).ToString());
+                        }
+                    }
+                    Adress adress = new Adress(IP);
+                    adresses[adressCount] = adress;
+
+                    linePointer++;
+                }
+
+                tasks[taskCount] = new Task(adresses, k);
+            }
+            return tasks;
+        }
+
+        static Adress GetHighestMask(Task task)
+        {
+            int maxSubnets = task.maxSubnets;
+            int bitPointer = 0;
+            List<int[]> subnetworks = new List<int[]>();
+
+            return FindHighestMask(task, maxSubnets, bitPointer, subnetworks).Item1;
+        }
+
+        static (Adress adress, List<int[]> subnetworks) FindHighestMask(Task task, int maxSubnets, int bitPointer, List<int[]> subnetworks)
+        {
+            // This is recursvie function, it will look for all posibilities within the valid reason
+            // 1. Step, we get into what groups would our subnetworks split upon puting 1 into the mask
+            int[][] newSubnets = GetOnesAndZerosAtBit(task, bitPointer);
+
+            System.Console.WriteLine(newSubnets[0].Length.ToString(), newSubnets[1].Length.ToString());
+            // Return what we got
+            return (task.adresses[0], subnetworks);
+        }
+
+        static int[][] GetOnesAndZerosAtBit(Task task, int bitPointer)
+        {
+            int[][] groups = new int[2][];
+            List<int> ones = new List<int>();
+            List<int> zeros = new List<int>();
+
+            for (int adressCount = 0; adressCount < task.adresses.Length; adressCount++)
+            {
+                Adress adress = task.adresses[adressCount];
+                if (adress.IP[bitPointer] == 1)
+                {
+                    ones.Add(adressCount);
+                    continue;
+                }
+                zeros.Add(adressCount);
+            }
+            groups[0] = ones.ToArray();
+            groups[1] = zeros.ToArray();
+
+            return groups;
+        }
+
+
+        class Task
+        {
+            public Adress[] adresses;
+            public readonly int maxSubnets;
+            public Task(Adress[] adresses, int maxSubnets)
+            {
+                this.adresses = adresses;
+                this.maxSubnets = maxSubnets;
+            }
+        }
+
+        class Adress
+        {
+            public byte[] IP;
+            public Adress(byte[] IP)
+            {
+                this.IP = IP;
+            }
+
+            public override string ToString()
+            {
+                string adress = "";
+
+                for (int l = 0; l < IP.Length; l++)
+                {
+                    adress += IP[l];
+                    if ((l + 1) % 8 == 0 && (l + 1) != IP.Length) { adress += "."; }
+                }
+                return adress;
+            }
+        }
+
+    }
+
+}
+

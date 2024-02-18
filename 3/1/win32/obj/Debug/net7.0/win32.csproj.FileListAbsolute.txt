@@ -1,0 +1,15 @@
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\3\1\win32\obj\Debug\net7.0\win32.csproj.AssemblyReference.cache
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\3\1\win32\obj\Debug\net7.0\win32.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\3\1\win32\obj\Debug\net7.0\win32.AssemblyInfoInputs.cache
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\3\1\win32\obj\Debug\net7.0\win32.AssemblyInfo.cs
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\3\1\win32\obj\Debug\net7.0\win32.csproj.CoreCompileInputs.cache
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\3\1\win32\bin\Debug\net7.0\win32.exe
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\3\1\win32\bin\Debug\net7.0\win32.deps.json
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\3\1\win32\bin\Debug\net7.0\win32.runtimeconfig.json
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\3\1\win32\bin\Debug\net7.0\win32.dll
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\3\1\win32\bin\Debug\net7.0\win32.pdb
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\3\1\win32\obj\Debug\net7.0\win32.dll
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\3\1\win32\obj\Debug\net7.0\refint\win32.dll
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\3\1\win32\obj\Debug\net7.0\win32.pdb
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\3\1\win32\obj\Debug\net7.0\win32.genruntimeconfig.cache
+C:\Users\vasko\VisualCode\FIKS\FIKS-23-24\3\1\win32\obj\Debug\net7.0\ref\win32.dll

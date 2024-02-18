@@ -1,0 +1,80 @@
+static (List<int> travelable, int travelTime, bool outcome, List<int> traveled) FindShortcut(List<byte[]> bytes, List<int> travelable,
+         int travelTime, int travelTimeStraight, int start, int finish, int last, List<int> traveled)
+        {
+
+            // System.Console.WriteLine($"Start {start} - finish {finish} - last {last}");
+            Dictionary<int, int> travelTimeTo = getTravelTimeTo(bytes, travelable, last);
+            int[] sortedKeys = GetSortedKeys(travelTimeTo);
+            // System.Console.WriteLine(travelTimeTo.Count);
+            // System.Console.WriteLine($"sorted {travelable.Count}");
+            foreach (int key in sortedKeys)
+            {
+                // System.Console.WriteLine($"Key {key} - {travelTimeTo[key]}");
+            }
+            // System.Console.WriteLine($"sortedKeys {string.Join(", ", sortedKeys)}");
+            // System.Console.WriteLine($"travelable {string.Join(", ", travelable)}");
+
+            foreach (int key in sortedKeys)
+            {
+                // System.Console.WriteLine($"Key {key} from {string.Join(", ", sortedKeys)}");
+                // System.Console.WriteLine($"Key {key} traveled {string.Join(", ", traveled)}");
+                if (key == last)
+                {
+                    // System.Console.WriteLine($"Skipped cuz same - {string.Join(", ", sortedKeys)}");
+                    continue;
+                }
+                if (key == finish)
+                {
+                    // System.Console.WriteLine($"Finished cuz found a way {string.Join(", ", traveled)} - {travelTime + travelTimeTo[key]}?{travelTimeStraight}");
+                    return (travelable, travelTime + travelTimeTo[key], true, traveled);
+                }
+
+                int travelTimeDeep = travelTime + travelTimeTo[key];
+                List<int> traveledDeep = traveled.ToList();
+                List<int> travelableDeep = travelable.ToList();
+
+                if (travelTimeDeep > travelTimeStraight)
+                {
+                    // System.Console.WriteLine($"Returned cuz too long {travelTimeDeep}>{travelTimeStraight}");
+                    return (travelable, travelTime, false, traveled);
+                }
+
+                travelableDeep.Remove(key);
+                traveledDeep.Add(key);
+
+                // System.Console.WriteLine($"Key {key} time + {travelTimeDeep}, traveled {string.Join(", ", traveled)}");
+                var shortcutDeep = FindShortcut(bytes, travelableDeep, travelTimeDeep, travelTimeStraight, start, finish, key, traveledDeep);
+
+                if (shortcutDeep.outcome)
+                {
+                    // System.Console.WriteLine($"Sent down finished {shortcutDeep.travelTime}?{travelTimeStraight}");
+                    return (shortcutDeep.travelable, shortcutDeep.travelTime, true, shortcutDeep.traveled);
+                }
+            }
+
+            return (travelable, travelTimeStraight, true, traveled);
+            // foreach (int key in sortedKeyss.ToList())
+            // {
+            //     if (key == last) { System.Console.WriteLine($"Skipped cuz same {sortedKeyss.Length} - {string.Join(", ", sortedKeyss)}"); continue; }
+            //     if (key == finish) { System.Console.WriteLine($"Finished cuz found a way {sortedKeys.Length}"); return (travelable, travelTime + travelTimeTo[key], true, traveledOrigin); }
+
+            //     int travelTimeDeep = travelTime + travelTimeTo[key];
+            //     List<int> traveledDeep = traveledOrigin.ToList();
+            //     List<int> travelableDeep = travelable.ToList();
+
+            //     if (travelTimeDeep > travelTimeStraight) { System.Console.WriteLine($"Returned cuz too long {travelTimeDeep}>{travelTimeStraight}"); return (travelable, travelTime, false, traveledOrigin); }
+
+            //     travelableDeep.Remove(key);
+            //     traveledDeep.Add(key);
+
+            //     // System.Console.WriteLine($"TraveledDeep {string.Join(", ", traveledDeep)}");
+            //     // System.Console.WriteLine($"travelableDeep {string.Join(", ", travelableDeep)}");
+            //     var shortcutDeep = FindShortcut(bytes, traveledDeep, travelTimeDeep, travelTimeStraight, start, finish, key, traveledDeep);
+
+            //     if (shortcutDeep.outcome) { System.Console.WriteLine("Sent down finished"); return (shortcutDeep.travelable, shortcutDeep.travelTime, true, shortcutDeep.traveled); }
+            //     // var shortcutDeep = FindShortcut(bytes, )
+            //     // System.Console.WriteLine("Gone Through");
+            // }
+            // System.Console.WriteLine("Couldnt find a way, returnin");
+
+        }
