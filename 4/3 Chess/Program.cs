@@ -11,15 +11,12 @@ class Chess
         int width = int.Parse(dimensions[0]);
         int height = int.Parse(dimensions[1]);
         int enemiesCount = int.Parse(dimensions[2]);
-        string[,] map = new string[height, width];
 
         string[] frodoCoords = input[1].Split();
         int frodoX = int.Parse(frodoCoords[0]);
         int frodoY = int.Parse(frodoCoords[1]);
-        map[frodoX, frodoY] = "F";
-
         Dictionary<int, Func<int, int, bool>> rules = new Dictionary<int, Func<int, int, bool>>();
-        Dictionary<int, location> enemyLocs = new Dictionary<int, location>();
+        Dictionary<int, Location> enemyLocs = new Dictionary<int, Location>();
 
         for (int i = 0; i < enemiesCount; i++)
         {
@@ -29,27 +26,22 @@ class Chess
             int enemyY = int.Parse(enemyData[2]);
             char direction = enemyData[3][0];
 
-            map[enemyX, enemyY] = i.ToString();
             var rule = GetRule(type, enemyX, enemyY, direction);
             rules.Add(i, rule);
-            location loc = new location(enemyX, enemyY);
+            Location loc = new Location(enemyX, enemyY);
             enemyLocs.Add(i, loc);
-
-            Console.WriteLine($"Type: {type}, Position: ({enemyX}, {enemyY}), Direction: {direction}");
         }
 
-        PrintMap(map, rules);
 
         int highestKS = 0;
-        highestKS = FindHighestKillStreak(map, rules, enemyLocs, frodoX, frodoY, highestKS);
-
-        System.Console.WriteLine($"HighestKS = {highestKS}");
+        highestKS = FindHighestKillStreak(width, height, rules, enemyLocs, frodoX, frodoY, highestKS);
+        if (highestKS == 0) System.Console.WriteLine("Byl jsem odhalen");
+        else System.Console.WriteLine(highestKS);
 
     }
 
-    public static int FindHighestKillStreak(string[,] map, Dictionary<int, Func<int, int, bool>> rules, Dictionary<int, location> enemyLocs, int fx, int fy, int highestKillStreak)
+    public static int FindHighestKillStreak(int width, int height, Dictionary<int, Func<int, int, bool>> rules, Dictionary<int, Location> enemyLocs, int fx, int fy, int highestKillStreak)
     {
-        // 
         int currLocX = fx;
         int currLocY = fy;
 
@@ -61,24 +53,20 @@ class Chess
             int i = enemyLocs.Keys.ToArray()[k];
             int ex = enemyLocs[i].x;
             int ey = enemyLocs[i].y;
-            if (Pathfinding.FindPath(currLocX, currLocY, ex, ey, map, rules))
+            if (Pathfinding.FindPath(currLocX, currLocY, ex, ey, width, height, rules))
             {
                 int newHKS = 0;
                 newHKS = highestKillStreak + 1;
-                System.Console.WriteLine($"Path to {i}");
-                string[,] mapMod = new string[map.GetLength(0), map.GetLength(1)];
-                mapMod = map;
-                mapMod[ex, ey] = "-";
 
                 Dictionary<int, Func<int, int, bool>> rulesMod = new Dictionary<int, Func<int, int, bool>>();
                 rulesMod = rules;
                 rulesMod.Remove(i);
 
-                Dictionary<int, location> enemyLocsMod = new Dictionary<int, location>();
+                Dictionary<int, Location> enemyLocsMod = new Dictionary<int, Location>();
                 enemyLocsMod = enemyLocs;
                 enemyLocs.Remove(i);
 
-                int outcome = FindHighestKillStreak(mapMod, rulesMod, enemyLocsMod, ex, ey, newHKS);
+                int outcome = FindHighestKillStreak(width, height, rulesMod, enemyLocsMod, ex, ey, newHKS);
                 if (outcome > highestKillStreak) highestKillStreak = outcome;
             }
         }
@@ -99,8 +87,6 @@ class Chess
             System.Console.WriteLine();
         }
     }
-
-
 
 
     public static bool CheckRules(int x, int y, Dictionary<int, Func<int, int, bool>> rules)
@@ -213,13 +199,10 @@ class Chess
 
 public static class Pathfinding
 {
-    public static bool FindPath(int fx, int fy, int ex, int ey, string[,] map, Dictionary<int, Func<int, int, bool>> rules)
+    public static bool FindPath(int fx, int fy, int ex, int ey, int width, int height, Dictionary<int, Func<int, int, bool>> rules)
     {
         if (!rules[0](fx, fy) || !rules[0](ex, ey))
             return false;
-
-        int mapWidth = map.GetLength(1);
-        int mapHeight = map.GetLength(0);
 
         HashSet<(int, int)> closedList = new HashSet<(int, int)>();
 
@@ -246,7 +229,7 @@ public static class Pathfinding
                 int nx = cx + dx[i];
                 int ny = cy + dy[i];
 
-                if (nx >= 0 && nx < mapWidth && ny >= 0 && ny < mapHeight && Chess.CheckRules(nx, ny, rules) && !closedList.Contains((nx, ny)) && Chess.CheckRules(nx, ny, rules))
+                if (nx >= 0 && nx < width && ny >= 0 && ny < height && !closedList.Contains((nx, ny)) && Chess.CheckRules(nx, ny, rules))
                 {
                     int tentativeGScore = GetDistance((fx, fy), (nx, ny));
 
@@ -318,11 +301,11 @@ public class PriorityQueue<T, U> where U : IComparable<U>
 }
 
 
-class location
+class Location
 {
     public int x;
     public int y;
-    public location(int x, int y)
+    public Location(int x, int y)
     {
         this.x = x;
         this.y = y;
